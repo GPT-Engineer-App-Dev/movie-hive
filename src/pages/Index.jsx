@@ -1,5 +1,6 @@
-import { Box, Container, Flex, Heading, HStack, Image, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
-import { FaPlay } from "react-icons/fa";
+import { Box, Container, Flex, Heading, HStack, Image, Link, SimpleGrid, Text, VStack, Input, InputGroup, InputLeftElement } from "@chakra-ui/react";
+import { FaPlay, FaSearch } from "react-icons/fa";
+import { useState } from "react";
 
 const movies = [
   { title: "Movie 1", image: "https://via.placeholder.com/300x450", description: "Description for movie 1" },
@@ -9,6 +10,15 @@ const movies = [
 ];
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <Container maxW="container.xl" p={0}>
       <Flex as="nav" bg="gray.900" color="white" p={4} justifyContent="space-between" alignItems="center">
@@ -18,6 +28,17 @@ const Index = () => {
           <Link href="#">Movies</Link>
           <Link href="#">Series</Link>
           <Link href="#">My List</Link>
+        <InputGroup>
+            <InputLeftElement pointerEvents="none" children={<FaSearch color="gray.300" />} />
+            <Input
+              type="text"
+              placeholder="Search movies..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              bg="white"
+              color="black"
+            />
+          </InputGroup>
         </HStack>
       </Flex>
 
@@ -26,7 +47,7 @@ const Index = () => {
           Featured Movies
         </Heading>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={10}>
-          {movies.map((movie, index) => (
+          {filteredMovies.map((movie, index) => (
             <Box key={index} bg="gray.800" color="white" borderRadius="md" overflow="hidden">
               <Image src={movie.image} alt={movie.title} />
               <Box p={4}>
